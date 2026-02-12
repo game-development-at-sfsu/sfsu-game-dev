@@ -20,10 +20,7 @@ const Footer = () => {
                     <FaDiscord />
                     Discord
                 </a>
-                <a href="mailto:sfsugamedev@gmail.com" className='text-white flex items-center gap-1 p-1 md:p-2'>
-                    <MdEmail />
-                    sfsugamedev@gmail.com
-                </a>
+                
             </div>
             <div className='flex items-center m-auto justify-center pb-4 pt-2'>
                 <img src="https://i.imgur.com/0S2Z0Jo.png" width="30" height="30" alt="/" className='mr-3' />
@@ -32,5 +29,8 @@ const Footer = () => {
         </div>
     )
 }
-
+		/*<a href="mailto:sfsugamedev@gmail.com" className='text-white flex items-center gap-1 p-1 md:p-2'>
+                    <MdEmail />
+                    sfsugamedev@gmail.com
+                </a>*/
 export default Footer
