@@ -1,17 +1,7 @@
+# Static React Website for the Game Development Club at SFSU
+This project was created in the Fall 2024 semester, my final semester at SFSU. Recognizing that I will be departing SFSU, I wanted to leave enough documentation such that anyone can fork this repo and continue maintaining it for the club. At the time of writing, the website is built on React, the domain is from PorkBun, and the remote instance is from Digital Ocean. The documentation assumes these are still the same, you may have to look up additional material if this changes. In the interest of time, I have not explained every trivial detail of the website, some level of web development experience is expected.
+
 ## React Development
-
-### Quick setup for local development (for now)
-
-Install npm (ideally using nvm) -> https://nodejs.org/en/download/
-then...
-```
-npm install
-npm start
-```
-if the server complains that there's a dependency scan error,
-```
-npm install -D vite @vitejs/plugin-react @vitejs/plugin-react-swc vite-plugin-svgr
-```
 
 ### Replacing the Cover Images
 Replacing the images on the front page is fairly straightforward.
@@ -77,7 +67,74 @@ If you view `Projects.jsx`, you'll notice the design pattern that was used to ma
 />
 ``` 
 
-### Installing the Server (from scratch) (may be outdated)
+### Tool Assisted Archive Extension
+In the `tools` folder, there is a Python script intended to drastically speed up the process of adding a new itch.io Game Jam to the website called `itchScraper.py`.  
+
+To use this tool, ensure you have Python, Selenium, and Chromedriver installed:  
+You can install selenium with Pip by running the code below on a terminal.
+```pip install selenium```
+
+- There is a version of `chromedriver.exe` in the `tools` folder, but this will likely be out of date by current time.  
+
+To update the version, go to [https://googlechromelabs.github.io/chrome-for-testing/](https://googlechromelabs.github.io/chrome-for-testing/)  
+Follow the URL for the chromedriver *Binary* made for your *Platform*. You also need Google Chrome installed for this, which you can grab here as well.  
+Replace `chromedriver.exe` in the `tools` directory with the one you downloaded.
+
+To use the script, call it with the link for the submissions page of a Game Jam as an argument:
+```
+python itchScrapyer.py https://itch.io/jam/fall2024-at-sfsu/entries
+```
+After completing it's run, the script will create a file called `scraper_output.txt`.  This file contains the code you need to append the `Archive` page. Copy everything in this file.  
+
+In `Archive.jsx`, paste the contents of the output under `<CategoryContainer>` such that it creates a new category just like the existing examples. You may have to make minor edits to the indentation and such, but the script has done all the heavy lifting for you.  
+
+- For games that aren't actually on itch.io (like Roblox), make sure you manually edit the link from the output and change it to the roblox game page.  
+
+### Thumbnail Retrieval from itch.io
+Manual extension is easy if you have all the data. This is straightforward for fields like `title`, `authors`, and `game_url`. But getting the `image_url` for the thumbnail can be a little less obvious.
+
+**If you are on the submissions page of a Game Jam:**  
+1. With your mouse over the thumbnail for a game, right click and select *Inspect Element*.  
+2. The popup should already be highlighting the item you were looking at (likely starts with `<a href=`).  
+3. Click the *Right Arrow* on the `<a>` tag to show subordinate tags until you locate an `<img>` tag.  
+4. Copy the contents of `src="there_should_be_a_link_here"`, the link inside the quotes is what you are looking for.  
+5. Paste it where needed, this link points to the itch.io game thumbnail.
+
+## Remote Hosting
+
+### Accessing the Server
+To access the droplet which will be hosting the website, we need to SSH into it.  
+For security purposes, the key is not present in the GitHub repo, but someone should have it.
+
+Run the following command from a terminal where the working directory is the same as where the key is located (I used the Downloads folder):
+```
+ssh -i ssh_key root@droplet_ip
+```
+Make sure to change `ssh_key` to the filename of the key if you are in the same directory, or provide a path to the key. Also, change `droplet_ip` to the ip of the digital ocean droplet.
+
+### Updating the Server
+Once you are ready to host the project online, run `npm run build`  
+This will create an optimized production build that needs to be placed on the server.
+
+**You can do this with the `pushUpdate` Python script by running `python pushUpdate.py` from a terminal in the repo's root directory and entering the passphrase when it asks.**  
+
+If the script does not work for whatever reason, you can do it manually by following the steps below:  
+Run the command below (make sure to replace `droplet_ip` with the correct value) to upload the build directory.
+```
+scp -i sfsugamedev_key -r build/* root@droplet_ip:/var/www/react-app
+```
+This command should be ran from the repo's root directory, which contains the `build` folder.  
+This command will also SSH into the droplet, this means the key needs to be in the same directory you are running the command from.
+
+**When I moved my SSH key into the repo directory and tried SSHing, it complained that the permissions were too open.**  
+1. I fixed this by right clicking the key, going to properties, then security, and clicking advanced.  
+2. I clicked *Disable Inheritence* and then clicked *Change* next to owner at the top to make myself the owner.  
+3. Then, I deleted all existing permissions. I added myself, gave myself *Full Control*, and saved the permissions.
+- (You may not need to add yourself if you are struggling to do so, as long as you are the owner and no one else has permissions).  
+
+Once uploaded, ssh back into the node with `ssh -i ssh_key root@droplet_ip` and run `sudo systemctl reload nginx` to reload the page contents.  
+
+### Installing the Server (from scratch)
 If, for whatever reason, you need to reinstall the droplet from scratch, here are all the steps to do so:
 
 ssh into the droplet or node and run the following commands to install nginx (the web server)
@@ -120,7 +177,7 @@ sudo certbot --nginx -d domain.com -d www.domain.com
 
 Finally, you can test the server by running `sudo nginx -t`. If the test was successful, run `sudo systemctl reload nginx` and the server should be working.
 
-### Digital Ocean Setup (may be outdated)
+### Digital Ocean Setup
 If there is no existing, already configured, Digital Ocean droplet, here are the steps to configure a blank droplet.
 
 **Adding an SSH Key:**  
@@ -159,4 +216,3 @@ ns2.digitalocean.com
 ns3.digitalocean.com
 ```
 (This will take a few hours, maybe a day, to kick into effect).
-
