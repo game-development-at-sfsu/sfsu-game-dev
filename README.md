@@ -8,9 +8,9 @@ then...
 npm install
 npm start
 ```
-if the server complains that there's a dependency scan error,
+to get rid of the dependency error (dev dependencies), do
 ```
-npm install -D vite @vitejs/plugin-react @vitejs/plugin-react-swc vite-plugin-svgr
+npm run build
 ```
 
 ### Replacing the Cover Images
