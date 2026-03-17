@@ -20,18 +20,18 @@ const NavBar = () => {
                     <h1 className='text-xl font-bold text-white'>GAME DEV @ SFSU</h1>
                 </Link>
             </div>
-            <ul className='hidden sm:flex px-4'>
+	    {/*<ul className='hidden sm:flex px-4'>
                 <li className='py-0'>
                     <Link to='/projects' className={`${isActive('/projects') ? 'font-bold' : ''}`}>Projects</Link>
                 </li>
                 <li className='py-0'>
                     <Link to='/archive' className={`${isActive('/archive') ? 'font-bold' : ''}`}>Archive</Link>
                 </li>
-            </ul>
-            {/* Hamburger Icon */}
+            </ul>*/}
+            {/* Hamburger Icon 
             <div onClick={handleNav} className='sm:hidden z-20'>
                 <FaBars size={20} className='mr-4 cursor-pointer' />
-            </div>
+            </div> */}
             {/* Mobile Menu */}
             <div 
                 onClick={handleNav}
@@ -41,7 +41,7 @@ const NavBar = () => {
                     : 'absolute top-0 h-screen left-[-100%] ease-in duration-500'
                 }
             >
-                <ul className='h-full w-full text-center pt-12'>
+	    {/* <ul className='h-full w-full text-center pt-12'>
                     <li className='text-2xl py-8'>
                         <Link to='/' className={`${isActive('/') ? 'font-bold' : ''}`}>Home</Link>
                     </li>
@@ -51,7 +51,7 @@ const NavBar = () => {
                     <li className='text-2xl py-8'>
                         <Link to='/archive' className={`${isActive('/archive') ? 'font-bold' : ''}`}>Archive</Link>
                     </li>
-                </ul>
+                </ul> */}
             </div>
         </div>
     )
